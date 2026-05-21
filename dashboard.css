@@ -1,8 +1,8 @@
 :root {
-    --sbi-purple: #381E72;
-    --sbi-magenta: #B50E5B;
-    --sbi-blue: #381E72; /* Aliased for backwards compatibility */
-    --sbi-red: #B50E5B;  /* Aliased for backwards compatibility */
+    --hdfc-purple: #381E72;
+    --hdfc-magenta: #B50E5B;
+    --hdfc-blue: #381E72; /* Aliased for backwards compatibility */
+    --hdfc-red: #B50E5B;  /* Aliased for backwards compatibility */
     --bg-light: #f7f9fc;
     --text-dark: #1c1e21;
     --text-grey: #5f6368;
@@ -52,7 +52,7 @@ body {
 
 .brand-text {
     font-weight: 700;
-    color: var(--sbi-blue);
+    color: var(--hdfc-blue);
     font-size: 18px;
     letter-spacing: -0.5px;
 }
@@ -66,7 +66,7 @@ body {
 .bar {
     width: 24px;
     height: 2px;
-    background-color: var(--sbi-blue);
+    background-color: var(--hdfc-blue);
     border-radius: 2px;
 }
 
@@ -128,7 +128,7 @@ body {
 
 .btn-apply {
     background-color: var(--white);
-    color: var(--sbi-magenta);
+    color: var(--hdfc-magenta);
     border: none;
     padding: 10px 24px;
     border-radius: 50px;
@@ -199,7 +199,7 @@ body {
 .card-header h3 {
     font-size: 18px;
     font-weight: 700;
-    color: var(--sbi-blue);
+    color: var(--hdfc-blue);
     margin-bottom: 12px;
     text-align: center;
 }
@@ -243,8 +243,8 @@ body {
 
 .btn-outline {
     background-color: transparent;
-    border: 2px solid var(--sbi-magenta);
-    color: var(--sbi-magenta);
+    border: 2px solid var(--hdfc-magenta);
+    color: var(--hdfc-magenta);
     border-radius: 50px;
 }
 

